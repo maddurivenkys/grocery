@@ -14,18 +14,18 @@ servers:
 paths:
   /query/fraudexclusionshistroy:
     post:
-      summary: return all history exclusions associated with a card
+      summary: Return all history exclusions associated with a card
       operationId: searchHistory
-      description: fetches fraud exclusions from the system
+      description: Fetches fraud exclusions from the system
       responses:
         '200':
-           description: a list of exclusions
-           content:
-             application/json:
-               schema:          
-                 $ref: '#/components/schemas/FraudExclusionResponse'
+          description: A list of exclusions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FraudExclusionResponse'
         '400':
-          description: 'invalid input, object invalid'        
+          description: 'Invalid input, object invalid'
       requestBody:
         content:
           application/json:
@@ -34,49 +34,42 @@ paths:
         description: Fetches one or more items based on criteria   
   /query/exclusions:
     post:
-      summary: return all active (current and future) travel associated with a card
+      summary: Return all active (current and future) travel associated with a card
       operationId: search
-      description: fetches fraud travel from the system
-	  "parameters": [
-         {
-            "name": "uuid",
-            "in": "header",
-            "description": "Uniquie indentifier for the request",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "maxLength": 36,
-              "minLength": 36,
-              "pattern": "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}",
-              "type": "string",
-              "example": "35fb301b-187f-4162-ac51-3d78109162cd"
-            }
-          },
-          {
-            "name": "switch-id",
-            "in": "header",
-            "description": "switch id",
-            "required": true,
-            "style": "simple",
-            "explode": false,
-            "schema": {
-              "maxLength": 10,
-              "minLength": 4,
-              "type": "string",
-              "example": "FISB"
-            }
-          }
-        ],
+      description: Fetches fraud travel from the system
+      parameters:
+        - name: uuid
+          in: header
+          description: Unique identifier for the request
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 36
+            minLength: 36
+            pattern: "[0-9a-fA-F]{8}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{4}-[0-9a-fA-F]{12}"
+            type: string
+            example: "35fb301b-187f-4162-ac51-3d78109162cd"
+        - name: switch-id
+          in: header
+          description: Switch ID
+          required: true
+          style: simple
+          explode: false
+          schema:
+            maxLength: 10
+            minLength: 4
+            type: string
+            example: "FISB"
       responses:
         '200':
-           description: a list of travel
-           content:
-             application/json:
-               schema:          
-                 $ref: '#/components/schemas/FraudExclusionResponse'
+          description: A list of travel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FraudExclusionResponse'
         '400':
-          description: 'invalid input, object nvalid'        
+          description: 'Invalid input, object invalid'
       requestBody:
         content:
           application/json:
@@ -85,18 +78,18 @@ paths:
         description: Fetches one or more items based on criteria
   /query/exclusionshistory:
     post:
-      summary: return all active (current and future) travel associated with a card
+      summary: Return all active (current and future) travel associated with a card
       operationId: search history
-      description: fetches fraud travel from the system
+      description: Fetches fraud travel from the system
       responses:
         '200':
-           description: a list of travel
-           content:
-             application/json:
-               schema:          
-                 $ref: '#/components/schemas/FraudExclusionResponse'
+          description: A list of travel
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FraudExclusionResponse'
         '400':
-          description: 'invalid input, object nvalid'        
+          description: 'Invalid input, object invalid'
       requestBody:
         content:
           application/json:
@@ -105,22 +98,22 @@ paths:
         description: Fetches one or more items based on criteria      
   /query/exclusionactivecount:
     post:
-      summary: return number of active records for given search
+      summary: Return number of active records for given search
       operationId: searches active count
-      description: fetches count from the system for given input
+      description: Fetches count from the system for given input
       responses:
         '200':
-           description: a list of travels
-           content:
-             application/json:
-               schema:
-                 type: object
-                 properties: 
-                   count: 
+          description: A list of travels
+          content:
+            application/json:
+              schema:
+                type: object
+                properties: 
+                  count: 
                     type: integer
                     example: 1000
         '400':
-          description: 'invalid input, object invalid'
+          description: 'Invalid input, object invalid'
       requestBody:
         content:
           application/json:
@@ -136,7 +129,7 @@ paths:
       parameters:
         - in: header
           name: uuid
-          description: Uniquie indentifier for the request
+          description: Unique identifier for the request
           schema:
             type: string
             example: 35fb301b-187f-4162-ac51-3d78109162cd
@@ -158,7 +151,7 @@ paths:
                     "startDate": "2019-11-08:14:12:03.130000",
                     "endDate": "2019-11-08:14:12:03.130000",
                     "addedByUser": "",
-                    "portfolio": "FIB1840254029",
+                    "portfolio": "FIB1840254029"
                   }
       responses:
         200:
@@ -174,19 +167,19 @@ paths:
                     {
                       "entity": { "exclusionId": "" },
                       "metadata":
-                        { "msgLst": [{ "code": "00", "text": "SUCCESS" }] },
+                        { "msgLst": [{ "code": "00", "text": "SUCCESS" }] }
                     }
   /fraudexclusion/{exclusionid}:
     patch:
       tags:
         - Fraud Exclusion Management API
-      summary: Update any information in an api.
+      summary: Update any information in an API.
       description: |
         This will allow you to Update existing exclusion
       parameters:
         - in: header
           name: uuid
-          description: Uniquie indentifier for the request
+          description: Unique identifier for the request
           schema:
             type: string
             example: 35fb301b-187f-4162-ac51-3d78109162cd
@@ -215,7 +208,7 @@ paths:
                     "startDate": "2019-11-08:14:12:03.130000",
                     "endDate": "2019-11-08:14:12:03.130000",
                     "lastUpdatedUser": "",
-                    "portfolio": "FIB1840254029",
+                    "portfolio": "FIB1840254029"
                   }
       responses:
         200:
@@ -231,7 +224,7 @@ paths:
                     {
                       "entity": {},
                       "metadata":
-                        { "msgLst": [{ "code": "00", "text": "SUCCESS" }] },
+                        { "msgLst": [{ "code": "00", "text": "SUCCESS" }] }
                     }
     delete:
       tags:
@@ -241,7 +234,7 @@ paths:
       parameters:
         - in: header
           name: uuid
-          description: Uniquie indentifier for the request
+          description: Unique identifier for the request
           schema:
             type: string
             example: 35fb301b-187f-4162-ac51-3d78109162cd
@@ -257,7 +250,7 @@ paths:
           schema:
             type: string
             example: someuser
-          description: the user who deleted the excl
+          description: The user who deleted the exclusion
           required: true
       responses:
         200:
@@ -309,13 +302,13 @@ components:
         startDate:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
           description: 'From Date means starting the date range from the beginning of that day 00:00:00 AM and format is yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-19:21:54:16'       
         endDate:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
           description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-21:21:54:16'
         addedByUser:
@@ -338,9 +331,9 @@ components:
         pan:
           type: string
           example: '545354534534455'
-		portfolio:
-		  type: string
-		  maximum: 14
+        portfolio:
+          type: string
+          maximum: 14
           example: 'FIB1234567890'
         segmentID:
           type: string
@@ -359,31 +352,31 @@ components:
         startDate:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
           description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-19:21:54:16'
         endDate:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
           description: 'Date format is  yyyy-MM-dd:HH24:mm:ss.SSSS'
           example: '2023-05-21:21:54:16.3451'
         addedByUser:
           type: string
           maximum: 9
           example: 'venkat'
-		lastAction:
-		  type: string
-		  maximum: 1
-		  example: 'I'
-		  enum:
-		    - 'I'
-			- 'U'
-			- 'D'
-		lastActionDateTime:
-		  type: string
+        lastAction:
+          type: string
+          maximum: 1
+          example: 'I'
+          enum:
+            - 'I'
+            - 'U'
+            - 'D'
+        lastActionDateTime:
+          type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
           description: 'Date format is  yyyy-MM-dd:HH24:mm:ss.SSSS'
           example: '2023-05-21:21:54:16.3451'
     FraudExclusionRequestItem:
@@ -412,25 +405,25 @@ components:
         startDateFrom:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
           description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-19:21:54:16'
         startDateTo:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
           description: 'To Date means ending the range on that day 11:59:59PM and format is  yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-21:21:54:16'
         endDateFrom:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
           description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-19:21:54:16'
         endDateTo:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
           description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-21:21:54:16'
         addedByUser:
@@ -440,46 +433,11 @@ components:
         pageNumber: 
           type: number
           description: page number to retrieve the records matching given criteria
-          example: greater than equal to 0
+          example: greater than or equal to 0
         pageSize:
           type: number
-          description: number records to be return per page
+          description: number of records to be returned per page
           example: 100    
-    FraudExclusionResponseItem:
-      type: object           
-      properties:
-        pan:
-          type: string
-          example: '545354534534455'        
-        travelID:
-          type: string
-          maximum: 1
-          enum: 
-            - 'M'
-            - 'S'
-            - 'C'
-            - 'V'            
-          example: 'M'
-        travelValue:
-          type: string
-          maximum: 1
-          example: 'M'
-        startDate:
-          type: string
-          maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-19:21:54:16'
-        endDate:
-          type: string
-          maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-21:21:54:16'
-        addedByUser:
-          type: string
-          maximum: 9
-          example: 'venkat'
     FraudExclusionEndRequestPayload:
       type: object
       properties:
@@ -500,7 +458,7 @@ components:
         endDate:
           type: string
           maximum: 18
-		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
           description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
           example: '2023-05-21:21:54:16'
     FraudExclusionDel:
@@ -516,18 +474,18 @@ components:
           example: 'venkat'
     AddExclusionRequest:
       type: object
-      description: Request adding an exclusion
+      description: Request for adding an exclusion
       properties:
         pan:
           $ref: "#/components/schemas/PAN"
         exclusionType:
           type: string
           description: |
-            The type of the exclusion to delete.
+            The type of the exclusion to add.
             <dl>
               <dt>CC</dt><dd>Country CODE</dd>
               <dt>SC</dt><dd>State CODE</dd>
-              <dt>MCC</dt><dd>Merchange Category Code</dd>
+              <dt>MCC</dt><dd>Merchant Category Code</dd>
             </dl>
           maxLength: 3
         countryCode:
@@ -558,11 +516,11 @@ components:
         exclusionType:
           type: string
           description: |
-            The type of the exclusion to delete.
+            The type of the exclusion to update.
             <dl>
               <dt>CC</dt><dd>Country CODE</dd>
               <dt>SC</dt><dd>State CODE</dd>
-              <dt>MCC</dt><dd>Merchange Category Code</dd>
+              <dt>MCC</dt><dd>Merchant Category Code</dd>
             </dl>
           maxLength: 3
         pan:
@@ -594,71 +552,83 @@ components:
       type: object
       description: Response for adding an exclusion
       properties:
-        exclusionId:
-          type: string
-          description: |
-            Key of the exclusion that was added.
+        entity:
+          $ref: "#/components/schemas/FraudExclusionDel"
         metadata:
-          $ref: "#/components/schemas/Metadata"
-
+          $ref: "#/components/schemas/MetaData"
     UpdateExclusionResponse:
       type: object
       description: Response for updating an exclusion
       properties:
+        entity:
+          $ref: "#/components/schemas/FraudExclusionDel"
         metadata:
-          $ref: "#/components/schemas/Metadata"
+          $ref: "#/components/schemas/MetaData"
     DeleteExclusionResponse:
       type: object
       description: Response for deleting an exclusion
       properties:
+        entity:
+          $ref: "#/components/schemas/FraudExclusionDel"
         metadata:
-          $ref: "#/components/schemas/Metadata"
-    PAN:
+          $ref: "#/components/schemas/MetaData"
+    MetaData:
       type: object
-      description: "Primary account number aka Card number aka Card account number."
-      properties:
-        plainText:
-          type: string
-          description: "Plain-text PAN."
-        cipherText:
-          type: string
-          description: "Compact-serialzed JWE Object."
-        alias:
-          type: string
-          description: "Proxy for PAN.  This property is only valid in certain cases."
-
-    Metadata:
-      type: object
+      description: The response metadata
       properties:
         msgLst:
-          description: Contains multiple messages.  Will always contain at least one message.
           type: array
           items:
-            $ref: "#/components/schemas/Message"
-
-    Message:
+            $ref: "#/components/schemas/Msg"
+    Msg:
       type: object
+      description: The response message
       properties:
         code:
           type: string
-          description: API execution status. <code>00</code> for success.
+          description: The message code
+          maxLength: 2
         text:
           type: string
-          description: API execution status description <code>SUCCESS</code> for success.
-        type:
+          description: The message text
+          maxLength: 128
+    PAN:
+      type: object
+      description: The Primary Account Number
+      properties:
+        plainText:
           type: string
-          description: "Error response type. Null or Empty for 200 OK response"
-          enum:
-            - APPLICATION_ERROR
-            - SYSTEM_ERROR
-            - VALIDATION_ERROR
-        severity:
+          maxLength: 19
+        encryptedText:
           type: string
-          description: "API response critical errors. Null or Empty for 200 OK response"
-          enum:
-            - None
-            - Info
-            - Warning
-            - Fatal
-            - Error
-
+          maxLength: 512
+    Travel:
+      type: object
+      description: The travel information
+      properties:
+        travelID:
+          type: string
+          description: The travel ID
+        travelValue:
+          type: string
+          description: The travel value
+    TravelEndRequestPayload:
+      type: object
+      description: The request payload for ending travel
+      properties:
+        travelID:
+          type: string
+          description: The travel ID
+        endDate:
+          type: string
+          description: The end date of the travel
+    DeleteTravelRequestPayload:
+      type: object
+      description: The request payload for deleting a travel
+      properties:
+        travelID:
+          type: string
+          description: The travel ID
+        userID:
+          type: string
+          description: The user ID who deleted the travel
