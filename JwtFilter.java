@@ -9,6 +9,8 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.Key;
+// add below line in applicaitn.properties
+//jwt.privateKeyPath=/path/to/your-private-key.pem
 
 public class JwtFilter extends OncePerRequestFilter {
 
