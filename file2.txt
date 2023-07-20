@@ -1,1 +1,417 @@
-File 2
+openapi: 3.0.0
+info:
+  title: Query api for segmentation
+  description: Query api for segmentation from Fraud middleware
+  version: 1.0.0
+  contact:
+    name: FIS
+    email: Doozers@fisglobal.com
+  license:
+    name: FIS 
+    url: 'TBD'
+servers: 
+  - url: https://fraudmiddleware.fisglobal.com
+paths:
+  /api/fraudsegmentadd:
+    post:
+      summary: adds a portfolio to segmentation
+      operationId: adds a segmentation record
+      description: add fraud segment in the system
+      responses:
+        '200':
+           description: success
+           content:
+             application/json:
+               schema:          
+                 $ref: '#/components/schemas/FraudSegmentResponsePayload'
+        '400':
+          description: 'invalid input, object invalid'        
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegmentRequestPayload'
+        description: Fetches one or more items based on criteria
+  /api/fraudsegmentupdt:
+    put:
+      summary: updates the portfolio of segmentation
+      operationId: update a segmentation record
+      description: update fraud segment in the system
+      responses:
+        '200':
+           description: success
+           content:
+             application/json:
+               schema:          
+                 $ref: '#/components/schemas/FraudSegmentResponsePayload'
+        '400':
+          description: 'invalid input, object invalid'        
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegmentRequestPayload'
+        description: Fetches one or more items based on criteria
+  /api/fraudsegmentdel:
+    post:
+      summary: deletes portfolio from segmentation 
+      operationId: delete a segmentation record
+      description: delete fraud segment in the system
+      responses:
+        '200':
+           description: success 
+           content:
+             application/json:
+               schema:          
+                 $ref: '#/components/schemas/FraudSegmentResponsePayload'
+        '400':
+          description: 'invalid input, object invalid'        
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegmentRequestPayload'
+        description: Deletes one or more items based on criteria
+  /api/fraudsegementend:
+    post:
+      operationId: sets end date to all cards in the segment
+      summary: Set the end date  to all cards that belong to that portfolio and segment id
+      description: Set the end date  to all cards that belong to that portfolio and segment id
+      responses:
+        '200':
+           description: success
+           content:
+             application/json:
+               schema:          
+                 type: object
+                 properties:
+                   status:
+                     type: string
+                     enum:
+                       - 'success'
+                       - 'failed'
+        '400':
+          description: 'invalid input, object invalid'        
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegmentEndRequestPayload'
+        description: Fetches one or more items based on criteria
+  /query/fraudsegmenthistroy:
+    post:
+      summary: return all history segments associated with a card
+      operationId: searchHistory
+      description: fetches fraud segment from the system
+      responses:
+        '200':
+           description: a list of segments
+           content:
+             application/json:
+               schema:          
+                 $ref: '#/components/schemas/FraudSegementResponse'
+        '400':
+          description: 'invalid input, object invalid'        
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegementRequestItem'
+        description: Fetches one or more items based on criteria   
+  /query/fraudsegment:    
+    post:
+      summary: return all active (current and future) segments associated with a card
+      operationId: search
+      description: fetches fraud segment from the system
+      responses:
+        '200':
+           description: a list of segments
+           content:
+             application/json:
+               schema:          
+                 $ref: '#/components/schemas/FraudSegementResponse'
+        '400':
+          description: 'invalid input, object invalid'        
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegementRequestItem'
+        description: Fetches one or more items based on criteria
+  /query/fraudsegmentactivecount:
+    post:
+      summary: return number of active records for given search
+      operationId: searches active count
+      description: fetches count from the system for given input
+      responses:
+        '200':
+           description: a list of segments
+           content:
+             application/json:
+               schema:
+                 type: object
+                 properties: 
+                   count: 
+                    type: integer
+                    example: 1000
+        '400':
+          description: 'invalid input, object invalid'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegementRequestActiveCount'
+        description: Fetches the active count of  items based on criteria
+components:
+  schemas:
+    FraudSegmentRequestPayload:
+      type: object
+      required:
+        - pan
+        - portfolio
+        - segmentID
+        - segmentValue
+        - startDate
+      properties:
+        pan:          
+          type: string
+          example: '545354534534455'
+        portfolio:
+          type: string
+          maximum: 14
+          example: 'FIB1234567890'
+        segmentID:
+          type: string
+          enum:
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+            - '5'
+          maximum: 1
+          example: '1'
+        segmentValue:
+          type: string
+          maximum: 1
+          example: 'S'
+        startDate:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'To Date means ending the range on that day 11:59:59PM and format is  yyyy-MM-dd:HH24:mm:ss.SSSSSS'
+          example: '2023-05-19:21:54:16'
+        endDate:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss.SSSSSS'
+          example: '2023-05-21:21:54:16'        
+        addedByUser:
+          type: string
+          maximum: 9
+          example: 'venkat'
+    FraudSegmentResponsePayload:
+      type: object
+      required:
+        - status
+        - recordId
+        - pan
+      properties:
+        pan:          
+          type: string
+          example: '545354534534455'
+        status:
+          type: string
+          enum:
+            - 'Success'
+            - 'Failed'
+          maximum: 7
+          example: 'Success'
+        recordId:
+          type: string
+          example: ''
+    FraudSegementRequestItem:
+      type: object
+      required:
+        - portfolio
+        - pageNumber
+        - pageSize       
+      properties:
+        pan:          
+          type: string
+          example: '545354534534455'
+        portfolio:
+          type: string
+          maximum: 14
+          example: 'FIB1234567890'
+        segmentID:
+          type: string
+          enum:
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+            - '5'
+          maximum: 1
+          example: '1'
+        segmentValue:
+          type: string
+          example: 'S'
+        startDateFrom:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-19:21:54:16'
+        startDateTo:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'To Date means ending the range on that day 11:59:59PM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-21:21:54:16'
+        endDateFrom:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-19:21:54:16'
+        endDateTo:
+          type: string
+          maximum: 9
+          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-21:21:54:16'
+        addedByUser:
+          type: string
+          maximum: 9
+          example: 'venkat'
+        pageNumber: 
+          type: number
+          description: page number to retrieve the records matching given criteria
+          example: greater than equal to 0
+        pageSize:
+          type: number
+          description: number records to be return per page
+          example: 100
+    FraudSegementRequestActiveCount:
+      type: object
+      required:
+        - portfolio              
+      properties:
+        pan:          
+          type: string
+          example: '545354534534455'
+        portfolio:
+          type: string
+          maximum: 14
+          example: 'FIB1234567890'
+        segmentID:
+          type: string
+          enum:
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+            - '5'
+          maximum: 1
+          example: '1'
+        segmentValue:
+          type: string
+          example: 'S'
+        startDateFrom:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-19:21:54:16'
+        startDateTo:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'To Date means ending the range on that day 11:59:59PM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-21:21:54:16'
+        endDateFrom:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-19:21:54:16'
+        endDateTo:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-21:21:54:16'
+        addedByUser:
+          type: string
+          maximum: 9
+          example: 'venkat'        
+    FraudSegementResponse:
+      type: object
+      properties:        
+        total:
+          type: integer
+          example: 2000
+        segments:
+          type: array
+          items: 
+            $ref: '#/components/schemas/FraudSegementResponseItem'
+    FraudSegementResponseItem:
+      type: object           
+      properties:
+        pan:
+          type: string
+          example: '545354534534455'        
+        segmentID:
+          type: string
+          maximum: 1
+          enum: 
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+            - '5'
+          example: '1'
+        segmentValue:
+          type: string
+          maximum: 1
+          example: 'S'
+        startDate:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-19:21:54:16'
+        endDate:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-21:21:54:16'
+        addedByUser:
+          type: string
+          maximum: 9
+          example: 'venkat'
+    FraudSegmentEndRequestPayload:
+      type: object
+      properties:
+        portfolio:
+          type: string
+          maximum: 14
+          example: 'FIB1234567890'
+        segmentID:
+          type: string
+          maximum: 1
+          enum: 
+            - '1'
+            - '2'
+            - '3'
+            - '4'
+            - '5'
+          example: '1'
+        endDate:
+          type: string
+          maximum: 18
+		  pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
+          example: '2023-05-21:21:54:16'
+
