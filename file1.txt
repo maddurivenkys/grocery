@@ -1,5 +1,62 @@
-File 
-banana
-grapes
-oranges
-apples
+Our recommendation is to have at least one goal in all five of our goal categories: (1) CEO Goals (2) My Performance (3) My Clients (4) My Behavior, and (5) My Development.
+
+
+Be the Software Engineering Employer of Choice
+
+1. Be your own Chief Learning Officer and continuously upskill on new technologies and cross train on other applications /products
+2. Adhere and practice our core values - Win as One team, Be the Change and Lead with Integrity
+3. Participate in team and department meetings and townhalls. Display professional conduct at all times
+4. Timely escalation to management on any potential issues/risks leading to challenges in reaching overall delivery goals and formulate mitigation and solution strategies.
+5. Actively contribute to organizational initiatives ( Diversity, Operational Excellence, Accelerated talent acquisition and training of new joiners, Revenue enhancements, Uniform governance model, Tooling transformation etc).
+
+
+Contribute towards all key priorities for FIS, Banking and TechDev
+
+· Meet delivery commitments while partnering with colleagues across enterprise to ensure business objectives are met
+
+· Accelerate time-to-value through continuous improvement and innovation (ex. CI/CD, LCD,Advanced Agile Processes, Automation)
+
+· Embrace and support 2023 Future Forward initiatives 
+
+· Improve solutions, products, and services we provide by maintaining a quality first mindset.
+
+
+My Performance
+
+1. Deliver committed features/stories in each PI/Iteration on time with zero code related defects.
+2. Adhere to development best practices viz. static code analysis for quality, security and open-source compliance.
+3. Review the code against the acceptance criteria and adhere to best practices including secured coding practice
+4. Ensure thorough unit testing, code reviews, test strategy, test cases to avoid defect seepage to higher environment.
+5.Practice the culture of agile in spirit, blur role based boundaries, support each other to complete the committed features/user stories and avoid carry over of features/user stories.
+6. Participate and contribute in all SAFe /Agile related ceremonies.
+7. Contribute towards Global TechDev goal of >80% Feature Delivery Predictability, <60 days of Speed of Delivery and <12% of Production Defect Leakage for the year.
+8. Take complete ownership to deliver the committed features/stories
+
+
+My Clients
+
+1.Focus on client experience and delighting end users in every project /task worked upon.
+2. Engage with internal (LOB, Product etc) and external clients as needed to get instant feedback for delivered Features/Stories.
+3. Ensure zero UAT defects and smooth production deployments
+4. Contribute to TechDev goals of
+i) Reduction in total no. of client escalations to Leadership,
+ii) Decrease in Total Production Incidents (Severity 1-4) and
+iii) Improvement in average time to close incidents
+
+My personal development
+
+Spring boot mastering
+
+Micro services mastering
+
+Exploring and adopting CI/CD
+
+Understanding more about Cloud architecture
+
+Organizational beha
+
+1. 100% compliance in Reg U, Timely and accurate timekeeping, adherence to all policies and security guidelines
+
+2. Provide status reports, metrics and dashboards to ensure governance
+
+3. Groom and build next set of SMEs (Senior and Specialist roles)
