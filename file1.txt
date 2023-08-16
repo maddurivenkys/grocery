@@ -1,6 +1,3 @@
-Here's the Swagger document with corrected syntax issues:
-
-```yaml
 openapi: 3.0.0
 info:
   title: Query API for Segmentation
@@ -73,12 +70,6 @@ paths:
           description: 'Invalid input, object invalid'
         '500':
           description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentRequestPayload'
-        description: Deletes one or more items based on criteria
   /api/fraudsegmentend:
     post:
       operationId: setEndDateForSegment
@@ -242,9 +233,7 @@ components:
           example: 'S'
         startDate:
           $ref: '#/components/schemas/DateObj'
-        endDate
-
-:
+        endDate:
           $ref: '#/components/schemas/DateObj'
         addedByUser:
           type: string
@@ -467,35 +456,4 @@ components:
         exclusionId:
           type: string
           maxLength: 15
-    MsgData:
-      type: object
-      description: |
-        The response message
-        00 - Success;
-        01 - Request Data Not Found;
-        02 - Backend System Error;
-        03 - Bad request data, missing fields;
-        98 - No response received;
-        99 - Other error;
-      properties:
-        code:
-          type: string
-          maxLength: 2
-        enum:
-            - '00'
-            - '01'
-            - '02'
-            - '03'
-            - '98'
-            - '99'
-          text:
-            type: string
-            description: The message text
-            maxLength: 128
-            enum:
-              - 'Success'
-              - 'Request Data Not Found'
-              - 'Backend System Error'
-              - 'Bad request data, missing fields'
-              - 'No response received'
-              - 'Other error'
+    
