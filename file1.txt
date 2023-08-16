@@ -1,671 +1,438 @@
 openapi: 3.0.0
 info:
-  title: Fraud Exclusions Management API
-  description: |
-    The purpose of this API is to update, replace, or delete fraud exclusions.
+  title: Query API for Segmentation
+  description: Query API for segmentation from Fraud middleware
+  version: 1.0.0
   contact:
-    name: Doozers
+    name: FIS
     email: Doozers@fisglobal.com
   license:
-    name: FIS Proprietary
-  version: 1.0.0
+    name: FIS
+    url: 'TBD'
 servers:
-  - url: unknown
-securityDefinitions:
-  basicAuth:
-    type: basic
-security
-  - basicAuth: []
+  - url: https://fraudmiddleware.fisglobal.com
 paths:
-  /query/fraudexclusionshistroy:
+  /api/fraudsegment:
     post:
-      summary: Return all history exclusions associated with a card
-      operationId: searchHistory
-      description: Fetches fraud exclusions from the system
+      summary: Adds a portfolio to segmentation
+      operationId: addSegmentationRecord
+      description: Add fraud segment in the system
       responses:
         '200':
-          description: A list of exclusions
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FraudExclusionResponse'
+                $ref: '#/components/schemas/FraudSegmentResponsePayload'
         '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
-        '502':
-          description: Bad Gateway
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
+          description: 'Invalid input, object invalid'
+        '500':
+          description: 'Bad Gateway'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FraudExclusionRequestItem'
-        description: Fetches one or more items based on criteria   
-  /query/fraudexclusions:
-    post:
-      summary: Return all active (current and future) travel associated with a card
-      operationId: search
-      description: Fetches fraud travel from the system
+              $ref: '#/components/schemas/FraudSegmentRequestPayload'        
+  /api/fraudsegment/{exclusionId}:
+    put:
+      summary: Updates the portfolio of segmentation
+      operationId: updateSegmentationRecord
+      description: Update fraud segment in the system
       responses:
         '200':
-          description: A list of travel
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FraudExclusionResponse'
+                $ref: '#/components/schemas/FraudSegmentResponsePayload'
         '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
-        '502':
-          description: Bad Gateway
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
+          description: 'Invalid input, object invalid'
+        '500':
+          description: 'Bad Gateway'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FraudExclusionRequestItem'
+              $ref: '#/components/schemas/FraudSegmentRequestPayload'
         description: Fetches one or more items based on criteria
-  /query/pagedfraudsegment
-    post:
-      summary: Return all active (current and future) travel associated with a cards with pagination support
-      operationId: search
-      description: Fetches fraud travel from the system
+    delete:
+      summary: Deletes portfolio from segmentation
+      operationId: deleteSegmentationRecord
+      description: Delete fraud segment in the system
       responses:
         '200':
-          description: A list of travel
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FraudExclusionResponse'
+                $ref: '#/components/schemas/FraudSegmentResponsePayload'
         '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
-        '502':
-          description: Bad Gateway
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
+          description: 'Invalid input, object invalid'
+        '500':
+          description: 'Bad Gateway'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FraudExclusionRequestItem'
-        description: Fetches one or more items based on criteria   
-  /query/fraudexclusionshistory:
+              $ref: '#/components/schemas/FraudSegmentRequestPayload'
+        description: Deletes one or more items based on criteria
+  /api/fraudsegmentend: 
     post:
-      summary: Return all active (current and future) travel associated with a card
-      operationId: search history
-      description: Fetches fraud travel from the system
+      operationId: setEndDateForSegment
+      summary: Set the end date to all cards that belong to that portfolio and segment ID
+      description: Set the end date to all cards that belong to that portfolio and segment ID
       responses:
         '200':
-          description: A list of travel
+          description: Success
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FraudExclusionResponse'
+                type: object
+                properties:
+                  status:
+                    type: string
+                    enum:
+                      - 'success'
+                      - 'failed'
         '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
-        '502':
-          description: Bad Gateway
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
+          description: 'Invalid input, object invalid'
+        '500':
+          description: 'Bad Gateway'
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/FraudExclusionRequestItem'
-        description: Fetches one or more items based on criteria      
-  /query/fraudexclusionactivecount:
+              $ref: '#/components/schemas/FraudSegmentEndRequestPayload'
+        description: Fetches one or more items based on criteria  
+  /query/fraudsegment:
+    post:
+      summary: Return all active (current and future) segments associated with a card
+      operationId: fraudsegment
+      description: Fetches fraud segment from the system
+      responses:
+        '200':
+          description: A list of segments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FraudSegementResponse'
+        '400':
+          description: 'Bad Request'
+        '500':
+          description: 'Bad Gateway'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegementRequestItem'
+        description: Fetches one or more items based on criteria
+  /query/pagedfraudsegment:
+    post:
+      summary: Return all active (current and future) segments associated with a card
+      operationId: pagedfraudsegment
+      description: Fetches fraud segment from the system
+      responses:
+        '200':
+          description: A list of segments
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/FraudSegementPagedResponse'
+        '400':
+          description: 'Bad Request'
+        '500':
+          description: 'Bad Gateway'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/FraudSegementRequestItem'
+  /query/fraudsegmentactivecount:
     post:
       summary: Return number of active records for given search
-      operationId: searches active count
+      operationId: searchActiveCount
       description: Fetches count from the system for given input
       responses:
         '200':
-          description: A list of travels
+          description: A list of segments
           content:
             application/json:
               schema:
                 type: object
-                properties: 
-                  count: 
+                properties:
+                  count:
                     type: integer
                     example: 1000
-        '400':
-          description: Bad Request
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
-        '502':
-          description: Bad Gateway
-          content:
-            '*/*':
-              schema:
-                type: object
-                additionalProperties:
-                  type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudExclusionRequestItem'
-        description: Fetches the active count of  items based on criteria  
-  /fraudexclusion:
+         '400':
+           description: 'Bad Request'
+         '500':
+           description: 'Bad Gateway'
+       requestBody:
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/FraudSegementRequestActiveCount'
+  /query/fraudsegmenthistroy:
     post:
-      tags:
-        - Fraud Exclusion Management API
-      summary: Adds one fraud exclusion
-      description: Adds one fraud exclusion to a specific card.
-      parameters:
-        - in: header
-          name: uuid
-          description: Unique identifier for the request
-          schema:
-            type: string
-            example: 35fb301b-187f-4162-ac51-3d78109162cd
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/AddExclusionRequest"
-            examples:
-              sample:
-                summary: Sample Request
-                value:
-                  {
-                    "pan": { "plainText": "1616100000010004" },
-                    "exclusionType": "",
-                    "countryCode": "",
-                    "stateCode": "",
-                    "MCC": "",
-                    "startDate": "2019-11-08:14:12:03.130000",
-                    "endDate": "2019-11-08:14:12:03.130000",
-                    "addedByUser": "",
-                    "portfolio": "FIB1840254029"
-                  }
+      summary: Return all history segments associated with a card
+      operationId: searchHistory
+      description: Fetches fraud segment from the system
       responses:
-        200:
-          description: Exclusion successfully added
+        '200':
+          description: A list of segments
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/AddExclusionResponse"
-              examples:
-                sample:
-                  summary: Sample Response
-                  value:
-                    {
-                      "entity": { "exclusionId": "" },
-                      "metadata":
-                        { "msgLst": [{ "code": "00", "text": "SUCCESS" }] }
-                    }
-  /fraudexclusion/{exclusionid}:
-    patch:
-      tags:
-        - Fraud Exclusion Management API
-      summary: Update any information in an API.
-      description: |
-        This will allow you to Update existing exclusion
-      parameters:
-        - in: header
-          name: uuid
-          description: Unique identifier for the request
-          schema:
-            type: string
-            example: 35fb301b-187f-4162-ac51-3d78109162cd
-        - in: path
-          name: exclusionid
-          schema:
-            type: string
-            example: 123415123123
-          description: The ID of the exclusion to be updated
-          required: true
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: "#/components/schemas/UpdateExclusionRequest"
-            examples:
-              sample1:
-                summary: Sample Request
-                value:
-                  {
-                    "pan": { "plainText": "1616100000010004" },
-                    "exclusionType": "",
-                    "countryCode": "",
-                    "stateCode": "",
-                    "MCC": "",
-                    "startDate": "2019-11-08:14:12:03.130000",
-                    "endDate": "2019-11-08:14:12:03.130000",
-                    "lastUpdatedUser": "",
-                    "portfolio": "FIB1840254029"
-                  }
-      responses:
-        200:
-          description: Exclusion successfully updated
+                $ref: '#/components/schemas/FraudSegementHistoryResponse'
+        '400':
+          description: 'Bad Request'
+        '500':
+          description: 'Bad Gateway'
+       requestBody:
+         content:
+           application/json:
+             schema:
+               $ref: '#/components/schemas/FraudSegementHistoryRequestItem'
+  /query/pagedfraudsegmenthistroy:
+    post:
+      summary: Return all history segments associated with a card
+      operationId: pagedfraudsegmenthistroy
+      description: Fetches fraud segment from the system
+        responses:
+          '200':
+            description: A list of segments
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/FraudSegementHistoryPagedResponse'
+          '400':
+            description: 'Bad Request'
+          '500':
+            description: 'Bad Gateway'
+        requestBody:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UpdateExclusionResponse"
-              examples:
-                sample1:
-                  summary: Sample Response
-                  value:
-                    {
-                      "entity": {},
-                      "metadata":
-                        { "msgLst": [{ "code": "00", "text": "SUCCESS" }] }
-                    }
-    delete:
-      tags:
-        - Fraud Exclusion Management API
-      summary: Delete a fraud exclusion
-      description: Delete a fraud exclusion by ID
-      parameters:
-        - in: header
-          name: uuid
-          description: Unique identifier for the request
-          schema:
-            type: string
-            example: 35fb301b-187f-4162-ac51-3d78109162cd
-        - in: path
-          name: exclusionid
-          schema:
-            type: string
-            example: 123415123123
-          description: The ID of the exclusion to be deleted
-          required: true
-        - in: query
-          name: deletedUserId
-          schema:
-            type: string
-            example: someuser
-          description: The user who deleted the exclusion
-          required: true
-      responses:
-        200:
-          description: Exclusion successfully deleted
-          content:
-            application/json:
-              schema:
-                $ref: "#/components/schemas/DeleteExclusionResponse"
+                $ref: '#/components/schemas/FraudSegementHistoryRequestItem'
 components:
   schemas:
-    FraudExclusionRequestPayload:
+    FraudSegmentRequestPayload:
       type: object
       required:
         - pan
         - portfolio
-        - exclusionType
-        - exclusionValue
+        - segmentID
+        - segmentValue
         - startDate
-        - endDate
-      properties:
-        pan:          
-           $ref: '#/components/schemas/PAN'
-        portfolio:
-          type: string
-          maximum: 14
-          example: 'FIB1234567890'
-        exclusionType:
-          type: string
-          enum:
-            - 'M'
-            - 'S'
-            - 'C'
-            - 'V'            
-          maximum: 1
-          example: 'M'
-        MCC:
-          type: string
-          maximum: 4
-          example: '0780'
-        countryCode:
-          type: string
-          maximum: 3
-          example: '020'
-        stateCode:
-          type: string
-          maximum: 2
-          example: 'AB'
-        startDate:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'From Date means starting the date range from the beginning of that day 00:00:00 AM and format is yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-19:21:54:16'       
-        endDate:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-21:21:54:16'
-        addedByUser:
-          type: string
-          maximum: 9
-          example: 'venkat'
-    FraudExclusionResponse:
-      type: object
-      properties:        
-        total:
-          type: integer
-          example: 2000
-        exclusions:
-          type: array
-          items: 
-            $ref: '#/components/schemas/FraudExclusionResponseItem'
-    FraudExclusionResponseItem:
-      type: object           
       properties:
         pan:
-           $ref: "#/components/schemas/PAN"
+          $ref: '#/components/schemas/PAN'          
         portfolio:
           type: string
-          maximum: 14
+          maxLength: 14
           example: 'FIB1234567890'
-        exclusionType:
+        segmentID:
+          $ref:"/components/schemas/SegmentID"
+        segmentValue:
           type: string
-          maximum: 1
-          enum: 
-            - 'C'
-            - 'S'
-            - 'M'
-          example: 'M'
-        stateCode:
-          type: string
-          maximum: 4
-          example: 'FL'
-        countryCode:
-          type: string
-          maximum: 4
-          example: 840
-        MCC:
-          type: string
-          maximum: 4
-          example: 742
+          maxLength: 1
+          example: 'S'
         startDate:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
-          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss.SSSS'
-          example: '2023-05-19:21:54:16.0000'
+          $ref:"/components/schemas/DateObj"
         endDate:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
-          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss.SSSS'
-          example: '2023-05-21:21:54:16.3451'
+          $ref:"/components/schemas/DateObj"
         addedByUser:
           type: string
-          maximum: 9
+          maxLength: 9
           example: 'venkat'
-        lastAction:
+    FraudSegmentResponsePayload:
+      type: object
+      required:
+        - status
+        - recordId
+        - pan
+      properties:
+        entity:
+          $ref: "/components/schemas/EntityObj"
+        msgdata:
+          $ref: "/components/schemas/MsgData"
+    FraudSegementRequestItem:
+      type: object
+      required:
+        - portfolio               
+      properties:
+        pan:
+          $ref: '#/components/schemas/PAN'
+        portfolio:
           type: string
-          maximum: 1
-          example: 'I'
-          enum:
-            - 'I'
-            - 'U'
-            - 'D'
-        lastActionDateTime:
+          maxLength: 14
+          example: 'FIB1234567890'
+        segmentID:
+          $ref:"/components/schemas/SegmentID"
+        segmentValue:
           type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}.[0-9]{4}'
-          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss.SSSS'
-          example: '2023-05-21:21:54:16.3451'
-    FraudExclusionRequestItem:
+          example: 'S'
+        startDateFrom:
+          $ref:"/components/schemas/DateObj"
+        startDateTo:
+          $ref:"/components/schemas/DateObj"
+        endDateFrom:
+          $ref:"/components/schemas/DateObj"
+        endDateTo:
+          $ref:"/components/schemas/DateObj"
+        addedByUser:
+          type: string
+          maxLength: 9
+          example: 'venkat'
+    FraudSegementHistoryRequestItem:
       type: object
       required:
         - portfolio
         - pageNumber
-        - pageSize       
+        - pageSize
       properties:
-        pan:          
-           $ref: "#/components/schemas/PAN"
+        pan:
+          $ref: '#/components/schemas/PAN'
         portfolio:
           type: string
-          maximum: 14
+          maxLength: 14
           example: 'FIB1234567890'
-        exclusionType:
+        segmentID:
+          $ref:"/components/schemas/SegmentID"
+        segmentValue:
           type: string
-          enum:
-            - 'M'
-            - 'S'
-            - 'C'
-            - 'V'            
-          maximum: 1
-          example: 'M-MCC , S-State , C-Country and V-VIP'
+          example: 'S'
         startDateFrom:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-19:21:54:16'
+          $ref:"/components/schemas/DateObj"
         startDateTo:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'To Date means ending the range on that day 11:59:59PM and format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-21:21:54:16'
+          $ref:"/components/schemas/DateObj"
         endDateFrom:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-19:21:54:16'
+          $ref:"/components/schemas/DateObj"
         endDateTo:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-21:21:54:16'
+          $ref:"/components/schemas/DateObj"
         addedByUser:
           type: string
-          maximum: 9
+          maxLength: 9
           example: 'venkat'
-        pageNumber: 
+        pageNumber:
           type: number
-          description: page number to retrieve the records matching given criteria
-          example: greater than or equal to 0
+          description: Page number to retrieve the records matching given criteria.
+          example: 0
         pageSize:
           type: number
-          description: number of records to be returned per page
+          description: Number of records to be returned per page.
           example: 100    
-    FraudExclusionEndRequestPayload:
+	FraudSegementRequestActiveCount:
+      type: object
+      required:
+        - portfolio
+      properties:
+        pan:
+          $ref: '#/components/schemas/PAN'
+        portfolio:
+          type: string
+          maxLength: 14
+          example: 'FIB1234567890'
+        segmentID:
+          $ref:"/components/schemas/SegmentID"
+        segmentValue:
+          type: string
+          example: 'S'
+        startDateFrom:
+          $ref:"/components/schemas/DateObj"
+        startDateTo:
+          $ref:"/components/schemas/DateObj"
+        endDateFrom:
+          $ref:"/components/schemas/DateObj"
+        endDateTo:
+          $ref:"/components/schemas/DateObj"
+        addedByUser:
+          type: string
+          maxLength: 9
+          example: 'venkat'
+    FraudSegementResponse:
+      type: object
+      properties:        
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FraudSegementResponseItem'
+	FraudSegementPagedResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 2000
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FraudSegementResponseItem'    
+    FraudSegementResponseItem:
+      type: object
+      properties:
+        pan:
+          $ref: '#/components/schemas/PAN'          
+        segmentID:
+          $ref:"/components/schemas/SegmentID"
+        segmentValue:
+          type: string
+          maxLength: 1
+          example: 'S'
+        startDate:
+          $ref:"/components/schemas/DateObj"
+        endDate:
+          $ref:"/components/schemas/DateObj"
+        addedByUser:
+          type: string
+          maxLength: 9
+          example: 'venkat'
+	FraudSegementHistoryResponse:
+      type: object
+      properties:
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FraudSegementHistoryResponseItem'
+    FraudSegementHistoryPagedResponse:
+      type: object
+      properties:
+        total:
+          type: integer
+          example: 2000
+        segments:
+          type: array
+          items:
+            $ref: '#/components/schemas/FraudSegementHistoryResponseItem'
+    FraudSegementHistoryResponseItem:
+      type: object
+      properties:
+        pan:
+          $ref: '#/components/schemas/PAN'
+        segmentID:
+          $ref:"/components/schemas/SegmentID"
+        segmentValue:
+          type: string
+          maxLength: 1
+          example: 'S'
+        startDate:
+          $ref:"/components/schemas/DateObj"
+        endDate:
+          $ref:"/components/schemas/DateObj"
+        addedByUser:
+          type: string
+          maxLength: 9
+          example: 'venkat'    	  
+    FraudSegmentEndRequestPayload:
       type: object
       properties:
         portfolio:
           type: string
-          maximum: 14
+          maxLength: 14
           example: 'FIB1234567890'
-        travelID:
-          type: string
-          maximum: 1
-          enum: 
-            - '1'
-            - '2'
-            - '3'
-            - '4'
-            - '5'
-          example: '1'
+        segmentID:
+          $ref: "/components/schemas/SegmentID"
         endDate:
-          type: string
-          maximum: 18
-          pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-          description: 'Date format is  yyyy-MM-dd:HH24:mm:ss'
-          example: '2023-05-21:21:54:16'
-    FraudExclusionDel:
-      type: object
-      properties:
-        exclusionID:
-          type: string
-          maximum: 15
-          example: '168544940218300'
-        userID:
-          type: string
-          maximum: 9
-          example: 'venkat'
-    AddExclusionRequest:
-      type: object
-      description: Request for adding an exclusion
-      properties:
-        pan:
-          $ref: "#/components/schemas/PAN"
-        exclusionType:
-          type: string
-          description: |
-            The type of the exclusion to add.
-            <dl>
-              <dt>CC</dt><dd>Country CODE</dd>
-              <dt>SC</dt><dd>State CODE</dd>
-              <dt>MCC</dt><dd>Merchant Category Code</dd>
-            </dl>
-          maxLength: 3
-        countryCode:
-          type: string
-          default: false
-          description: "Country Code"
-        stateCode:
-          type: string
-          description: "State Code"
-        MCC:
-          type: string
-          description: Merchant Category Code
-        startDate:
-          type: string
-        endDate:
-          type: string
-        addedByUser:
-          type: string
-      required:
-        - pan
-        - exclusionType
-        - startDate
-        - endDate
-        - addedByUser
-    UpdateExclusionRequest:
-      type: object
-      properties:
-        exclusionType:
-          type: string
-          description: |
-            The type of the exclusion to update.
-            <dl>
-              <dt>CC</dt><dd>Country CODE</dd>
-              <dt>SC</dt><dd>State CODE</dd>
-              <dt>MCC</dt><dd>Merchant Category Code</dd>
-            </dl>
-          maxLength: 3
-        pan:
-          $ref: "#/components/schemas/PAN"
-        countryCode:
-          type: string
-          default: false
-          description: "Country Code"
-        stateCode:
-          type: string
-          description: State Code
-        MCC:
-          type: string
-          description: Merchant Category Code
-        startDate:
-          type: string
-        endDate:
-          type: string
-        lastUpdatedUser:
-          type: string
-      required:
-        - pan
-        - exclusionType
-        - startDate
-        - endDate
-        - lastUpdatedUser
-
-    AddExclusionResponse:
-      type: object
-      description: Response for adding an exclusion
-      properties:
-        entity:
-          $ref: "#/components/schemas/FraudExclusionDel"
-        metadata:
-          $ref: "#/components/schemas/MetaData"
-    UpdateExclusionResponse:
-      type: object
-      description: Response for updating an exclusion
-      properties:
-        entity:
-          $ref: "#/components/schemas/FraudExclusionDel"
-        metadata:
-          $ref: "#/components/schemas/MetaData"
-    DeleteExclusionResponse:
-      type: object
-      description: Response for deleting an exclusion
-      properties:
-        entity:
-          $ref: "#/components/schemas/FraudExclusionDel"
-        metadata:
-          $ref: "#/components/schemas/MetaData"
-    MetaData:
-      type: object
-      description: The response metadata
-      properties:
-        msgLst:
-          type: array
-          items:
-            $ref: "#/components/schemas/Msg"
-    Msg:
-      type: object
-      description: The response message
-      properties:
-        code:
-          type: string
-          description: The message code
-          maxLength: 2
-        text:
-          type: string
-          description: The message text
-          maxLength: 128
+          $ref: "/components/schemas/DateObj"
     PAN:
       type: object
       description: The Primary Account Number
@@ -673,38 +440,57 @@ components:
         plainText:
           type: string
           maxLength: 19
-        encryptedText:
-          type: string
-          maxLength: 512
-    Travel:
+    SegmentID:
+      type: string
+      maxLength: 1
+      enum:
+        - '1'
+        - '2'
+        - '3'
+        - '4'
+        - '5'
+      example: '1
+    DateObj:
+      type: string
+      maximum: 18
+      pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
+      description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
+      example: '2023-05-21:21:54:16'
+    EntityObj:
       type: object
-      description: The travel information
       properties:
-        travelID:
+        exclusionId: 
           type: string
-          description: The travel ID
-        travelValue:
-          type: string
-          description: The travel value
-    TravelEndRequestPayload:
+          maxLength: 15
+    MsgData:
       type: object
-      description: The request payload for ending travel
+      description: | 
+            The response message
+            00 - Success;
+            01 - Request Data Not Found;
+            02 - Backend System Error;
+            03 - Bad request data, missing fields;
+            98 - No response received;
+            99 - Other error;
       properties:
-        travelID:
+        code:
           type: string
-          description: The travel ID
-        endDate:
+          maxLength: 2
+          enum:
+            - '00'
+            - '01'
+            - '02'
+            - '03'
+            - '98'
+            - '99'
+        text:
           type: string
-          description: The end date of the travel
-    DeleteTravelRequestPayload:
-      type: object
-      description: The request payload for deleting a travel
-      properties:
-        travelID:
-          type: string
-          description: The travel ID
-        userID:
-          type: string
-          description: The user ID who deleted the travel
-    
-        
+          description: The message text
+          maxLength: 128
+          enum:
+            - 'Success'
+            - 'Request Data Not Found'
+            - 'Backend System Error'
+            - 'Bad request data, missing fields'
+            - 'No response received'
+            - 'Other error'
