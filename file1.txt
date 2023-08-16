@@ -456,4 +456,35 @@ components:
         exclusionId:
           type: string
           maxLength: 15
-    
+        Msg:
+      type: object
+      description: | 
+            The response message
+            00 - Success;
+            01 - Request Data Not Found;
+            02 - Backend System Error;
+            03 - Bad request data, missing fields;
+            98 - No response received;
+            99 - Other error;
+      properties:
+        code:
+          type: string
+          maxLength: 2
+          enum:
+            - '00'
+            - '01'
+            - '02'
+            - '03'
+            - '98'
+            - '99'
+        text:
+          type: string
+          description: The message text
+          maxLength: 128
+          enum:
+            - 'Success'
+            - 'Request Data Not Found'
+            - 'Backend System Error'
+            - 'Bad request data, missing fields'
+            - 'No response received'
+            - 'Other error'
