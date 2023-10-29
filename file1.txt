@@ -1,497 +1,127 @@
-openapi: 3.0.0
-info:
-  title: Query API for Segmentation
-  description: Query API for segmentation from Fraud middleware
-  version: 1.0.0
-  contact:
-    name: FIS
-    email: Doozers@fisglobal.com
-  license:
-    name: FIS
-    url: 'TBD'
-servers:
-  - url: https://fraudmiddleware.fisglobal.com
-paths:
-  /api/fraudsegment:
-    post:
-      summary: Adds a portfolio to segmentation
-      operationId: addSegmentationRecord
-      description: Add fraud segment in the system
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FraudSegmentResponsePayload'
-        '400':
-          description: 'Invalid input, object invalid'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentRequestPayload'
-  /api/fraudsegment/{exclusionId}:
-    parameters:
-      - name: exclusionId
-        in: path
-        required: true
-        schema:
-          type: string
-        description: The exclusion ID for the fraud segment
-    put:
-      summary: Updates the portfolio of segmentation
-      operationId: updateSegmentationRecord
-      description: Update fraud segment in the system
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FraudSegmentResponsePayload'
-        '400':
-          description: 'Invalid input, object invalid'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentRequestPayload'
-        description: Fetches one or more items based on criteria
-    delete:
-      summary: Deletes portfolio from segmentation
-      operationId: deleteSegmentationRecord
-      description: Delete fraud segment in the system
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FraudSegmentResponsePayload'
-        '400':
-          description: 'Invalid input, object invalid'
-        '500':
-          description: 'Bad Gateway'
-  /api/fraudsegmentend:
-    post:
-      operationId: setEndDateForSegment
-      summary: Set the end date to all cards that belong to that portfolio and segment ID
-      description: Set the end date to all cards that belong to that portfolio and segment ID
-      responses:
-        '200':
-          description: Success
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  status:
-                    type: string
-                    enum:
-                      - 'success'
-                      - 'failed'
-        '400':
-          description: 'Invalid input, object invalid'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentEndRequestPayload'
-        description: Fetches one or more items based on criteria
-  /query/fraudsegment:
-    post:
-      summary: Return all active (current and future) segments associated with a card
-      operationId: fraudsegment
-      description: Fetches fraud segment from the system
-      responses:
-        '200':
-          description: A list of segments
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FraudSegmentResponse'
-        '400':
-          description: 'Bad Request'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentRequestItem'
-        description: Fetches one or more items based on criteria
-  /query/pagedfraudsegment:
-    post:
-      summary: Return all active (current and future) segments associated with a card
-      operationId: pagedfraudsegment
-      description: Fetches fraud segment from the system
-      responses:
-        '200':
-          description: A list of segments
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FraudSegmentPagedResponse'
-        '400':
-          description: 'Bad Request'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentRequestItem'
-  /query/fraudsegmentactivecount:
-    post:
-      summary: Return number of active records for given search
-      operationId: searchActiveCount
-      description: Fetches count from the system for given input
-      responses:
-        '200':
-          description: A list of segments
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  count:
-                    type: integer
-                    example: 1000
-        '400':
-          description: 'Bad Request'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentActiveCountRequest'
-  /query/fraudsegmenthistory:
-    post:
-      summary: Return all history segments associated with a card
-      operationId: searchHistory
-      description: Fetches fraud segment from the system
-      responses:
-        '200':
-          description: A list of segments
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FraudSegmentHistoryResponse'
-        '400':
-          description: 'Bad Request'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentHistoryRequestItem'
-  /query/pagedfraudsegmenthistory:
-    post:
-      summary: Return all history segments associated with a card
-      operationId: pagedfraudsegmenthistory
-      description: Fetches fraud segment from the system
-      responses:
-        '200':
-          description: A list of segments
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FraudSegmentHistoryPagedResponse'
-        '400':
-          description: 'Bad Request'
-        '500':
-          description: 'Bad Gateway'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FraudSegmentHistoryRequestItem'
-components:
-  schemas:
-    FraudSegmentRequestPayload:
-      type: object
-      required:
-        - pan
-        - portfolio
-        - segmentID
-        - segmentValue
-        - startDate
-      properties:
-        pan:
-          $ref: '#/components/schemas/PAN'
-        portfolio:
-          type: string
-          maxLength: 14
-          example: 'FIB1234567890'
-        segmentID:
-          $ref: '#/components/schemas/SegmentID'
-        segmentValue:
-          type: string
-          maxLength: 1
-          example: 'S'
-        startDate:
-          $ref: '#/components/schemas/DateObj'
-        endDate:
-          $ref: '#/components/schemas/DateObj'
-        addedByUser:
-          type: string
-          maxLength: 9
-          example: 'venkat'
-    FraudSegmentResponsePayload:
-      type: object
-      required:
-        - status
-        - recordId
-        - pan
-      properties:
-        entity:
-          $ref: '#/components/schemas/EntityObj'
-        msgdata:
-          $ref: '#/components/schemas/MsgData'
-    FraudSegmentRequestItem:
-      type: object
-      required:
-        - portfolio
-      properties:
-        pan:
-          $ref: '#/components/schemas/PAN'
-        portfolio:
-          type: string
-          maxLength: 14
-          example: 'FIB1234567890'
-        segmentID:
-          $ref: '#/components/schemas/SegmentID'
-        segmentValue:
-          type: string
-          example: 'S'
-        startDateFrom:
-          $ref: '#/components/schemas/DateObj'
-        startDateTo:
-          $ref: '#/components/schemas/DateObj'
-        endDateFrom:
-          $ref: '#/components/schemas/DateObj'
-        endDateTo:
-          $ref: '#/components/schemas/DateObj'
-        addedByUser:
-          type: string
-          maxLength: 9
-          example: 'venkat'
-    FraudSegmentHistoryRequestItem:
-      type: object
-      required:
-        - portfolio
-        - pageNumber
-        - pageSize
-      properties:
-        pan:
-          $ref: '#/components/schemas/PAN'
-        portfolio:
-          type: string
-          maxLength: 14
-          example: 'FIB1234567890'
-        segmentID:
-          $ref: '#/components/schemas/SegmentID'
-        segmentValue:
-          type: string
-          example: 'S'
-        startDateFrom:
-          $ref: '#/components/schemas/DateObj'
-        startDateTo:
-          $ref: '#/components/schemas/DateObj'
-        endDateFrom:
-          $ref: '#/components/schemas/DateObj'
-        endDateTo:
-          $ref: '#/components/schemas/DateObj'
-        addedByUser:
-          type: string
-          maxLength: 9
-          example: 'venkat'
-        pageNumber:
-          type: number
-          description: Page number to retrieve the records matching given criteria.
-          example: 0
-        pageSize:
-          type: number
-          description: Number of records to be returned per page.
-          example: 100
-    FraudSegmentActiveCountRequest:
-      type: object
-      required:
-        - portfolio
-      properties:
-        pan:
-          $ref: '#/components/schemas/PAN'
-        portfolio:
-          type: string
-          maxLength: 14
-          example: 'FIB1234567890'
-        segmentID:
-          $ref: '#/components/schemas/SegmentID'
-        segmentValue:
-          type: string
-          example: 'S'
-        startDateFrom:
-          $ref: '#/components/schemas/DateObj'
-        startDateTo:
-          $ref: '#/components/schemas/DateObj'
-        endDateFrom:
-          $ref: '#/components/schemas/DateObj'
-        endDateTo:
-          $ref: '#/components/schemas/DateObj'
-        addedByUser:
-          type: string
-          maxLength: 9
-          example: 'venkat'
-    FraudSegmentResponse:
-      type: object
-      properties:
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/FraudSegmentResponseItem'
-    FraudSegmentPagedResponse:
-      type: object
-      properties:
-        total:
-          type: integer
-          example: 2000
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/FraudSegmentResponseItem'
-    FraudSegmentResponseItem:
-      type: object
-      properties:
-        pan:
-          $ref: '#/components/schemas/PAN'
-        segmentID:
-          $ref: '#/components/schemas/SegmentID'
-        segmentValue:
-          type: string
-          maxLength: 1
-          example: 'S'
-        startDate:
-          $ref: '#/components/schemas/DateObj'
-        endDate:
-          $ref: '#/components/schemas/DateObj'
-        addedByUser:
-          type: string
-          maxLength: 9
-          example: 'venkat'
-    FraudSegmentHistoryResponse:
-      type: object
-      properties:
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/FraudSegmentHistoryResponseItem'
-    FraudSegmentHistoryPagedResponse:
-      type: object
-      properties:
-        total:
-          type: integer
-          example: 2000
-        segments:
-          type: array
-          items:
-            $ref: '#/components/schemas/FraudSegmentHistoryResponseItem'
-    FraudSegmentHistoryResponseItem:
-      type: object
-      properties:
-        pan:
-          $ref: '#/components/schemas/PAN'
-        segmentID:
-          $ref: '#/components/schemas/SegmentID'
-        segmentValue:
-          type: string
-          maxLength: 1
-          example: 'S'
-        startDate:
-          $ref: '#/components/schemas/DateObj'
-        endDate:
-          $ref: '#/components/schemas/DateObj'
-        addedByUser:
-          type: string
-          maxLength: 9
-          example: 'venkat'
-    FraudSegmentEndRequestPayload:
-      type: object
-      properties:
-        portfolio:
-          type: string
-          maxLength: 14
-          example: 'FIB1234567890'
-        segmentID:
-          $ref: '#/components/schemas/SegmentID'
-        endDate:
-          $ref: '#/components/schemas/DateObj'
-    PAN:
-      type: object
-      description: The Primary Account Number
-      properties:
-        plainText:
-          type: string
-          maxLength: 19
-    SegmentID:
-      type: string
-      maxLength: 1
-      enum:
-        - '1'
-        - '2'
-        - '3'
-        - '4'
-        - '5'
-      example: '1'
-    DateObj:
-      type: string
-      maxLength: 18
-      pattern: '[0-9]{4}-[0-9]{2}-[0-9]{2}:[0-9]{2}:[0-9]{2}:[0-9]{2}'
-      description: 'From Date means starting the date range from the beginning of that day 12:00:00 AM and format is  yyyy-MM-dd:HH24:mm:ss'
-      example: '2023-05-21:21:54:16'
-    EntityObj:
-      type: object
-      properties:
-        exclusionId:
-          type: string
-          maxLength: 15
-    MsgData:
-      type: object
-      description: | 
-            The response message
-            00 - Success;
-            01 - Request Data Not Found;
-            02 - Backend System Error;
-            03 - Bad request data, missing fields;
-            98 - No response received;
-            99 - Other error;
-      properties:
-        code:
-          type: string
-          maxLength: 2
-          enum:
-            - '00'
-            - '01'
-            - '02'
-            - '03'
-            - '98'
-            - '99'
-        text:
-          type: string
-          description: The message text
-          maxLength: 128
-          enum:
-            - 'Success'
-            - 'Request Data Not Found'
-            - 'Backend System Error'
-            - 'Bad request data, missing fields'
-            - 'No response received'
-            - 'Other error'
+{
+	"name": "fraud-navigator-ui",
+	"version": "0.0.0",
+	"license": "SEE LICENSE IN LICENSE",
+	"scripts": {
+		"ng": "ng",
+		"start": "ng serve --project=fraud-navigator-ui --aot",
+		"start-dev": "ng serve --project=fraud-navigator-ui -c=development",
+		"start-prod": "ng serve --project=fraud-navigator-ui -c=production",
+		"build": "ng build --project=fraud-navigator-ui --base-href=/fraud-navigator-ui/ --prod -c=production --source-map=false",
+		"build-dev": "ng build --project=fraud-navigator-ui --base-href=/fraud-navigator-ui/ -c=development",
+		"build-prod": "npm run build",
+        "build-prod-bk": "npm run build && npm run print-opening-comment && npm run print-branch && npm run print-latest-commit-hash && npm run print-closing-comment",
+		"build-war": "grunt -verbose --debug --stack -gruntfile grunt_fn.js",
+		"build-full": "yarn build-prod && yarn build-war",
+		"review": "yarn install && yarn start-dev",
+		"review-prod": "yarn install && yarn start-prod",
+		"test": "ng test  --project=fraud-navigator-ui",
+		"e2e": "ng e2e",
+		"print-opening-comment": "echo ^<!-- >> dist/apps/fraud-navigator-ui/index.html",
+		"print-closing-comment": "echo --^> >> dist/apps/fraud-navigator-ui/index.html",
+		"print-branch": "git rev-parse --abbrev-ref HEAD >> dist/apps/fraud-navigator-ui/index.html",
+		"print-latest-commit-hash": "git rev-parse HEAD >> dist/apps/fraud-navigator-ui/index.html"
+	},
+	"private": true,
+	"browserList": [
+		"last 2 version",
+		"> 1%",
+		"maintained node versions",
+		"not dead",
+		"IE 9-11"
+	],
+	"dependencies": {
+		"@angular/animations": "8.2.14",
+		"@angular/cdk": "8.0.2",
+		"@angular/cli": "8.2.2",
+		"@angular/common": "8.2.14",
+		"@angular/compiler": "8.2.14",
+		"@angular/compiler-cli": "8.2.14",
+		"@angular/core": "8.2.14",
+		"@angular/flex-layout": "8.0.0-beta.27",
+		"@angular/forms": "8.2.14",
+		"@angular/material": "~8.0.2",
+		"@angular/material-moment-adapter": "8.2.3",
+		"@angular/platform-browser": "8.2.14",
+		"@angular/platform-browser-dynamic": "8.2.14",
+		"@angular/router": "8.2.14",
+		"@ngrx/effects": "8.6.0",
+		"@ngrx/router-store": "8.6.0",
+		"@ngrx/store": "8.6.0",
+		"@ngx-translate/core": "11.0.1",
+		"@ruf/fis-ux-assets": "4.6.0",
+		"@ruf/material": "6.4.3",
+		"@ruf/ngx-datatable": "3.0.1",
+		"@ruf/shell": "4.8.1",
+		"@ruf/theming": "4.8.1",
+		"@swimlane/ngx-charts": "11.2.0",
+		"@swimlane/ngx-datatable": "^15.0.2",
+		"@types/big.js": "^6.1.2",
+		"@types/jquery": "^3.3.38",
+		"angular-split": "3.0.2",
+		"angular2-uuid": "1.1.1",
+		"big.js": "^6.1.1",
+		"bootstrap": "^4.4.1",
+		"chart.js": "^2.9.4",
+		"classlist.js": "^1.1.20150312",
+		"core-js": "~3.3.0",
+		"file-saver": "^2.0.2",
+		"global": "^4.3.2",
+		"grunt": "^1.3.0",
+		"grunt-cli": "^1.3.2",
+		"grunt-war": "^0.5.1",
+		"hammerjs": "2.0.8",
+		"jquery": "^3.6.0",
+		"jspdf":"2.5.1",
+		"jspdf-autotable":"3.6.0",
+		"marked": "0.8.0",
+		"moment": "2.29.4",
+		"moment-timezone": "^0.5.25",
+		"ng2-charts": "^2.3.2",
+		"ngrx-store-freeze": "0.2.4",
+		"ngrx-store-localstorage": "8.0.0",
+		"node-sass": "^4.14.1",
+		"primeicons": "^2.0.0",
+		"primeng": "^9.0.2",
+		"rxjs": "6.5.3",
+		"rxjs-compat": "6.5.3",
+		"typescript": "3.5.3",
+		"web-animations-js": "2.3.2",
+		"zone.js": "0.9.1",
+		"@types/mime": "2.0.3",
+		"@types/lodash": "4.14.149"
+	},
+	"devDependencies": {
+		"@angular-devkit/build-angular": "0.803.23",
+		"@angular-devkit/build-ng-packagr": "0.803.14",
+		"@angular-devkit/core": "8.3.23",
+		"@angular-devkit/schematics": "8.3.21",
+		"@angular/language-service": "8.2.14",
+		"@ngrx/schematics": "8.6.0",
+		"@ngrx/store-devtools": "8.6.0",
+		"@ruf/ruf-cli": "4.8.0",
+		"@ruf/schematics": "~4.5",
+		"@ruf/wrench": "~4.5",
+		"@schematics/angular": "0.7.3",
+		"@types/jasmine": "2.8.6",
+		"@types/jasminewd2": "2.0.3",
+		"@types/node": "8.10.10",
+		"codelyzer": "5.2.1",
+		"eslint": "5.4.0",
+		"jasmine-core": "3.5.0",
+		"jasmine-marbles": "0.6.0",
+		"jasmine-spec-reporter": "4.2.1",
+		"karma": "4.4.1",
+		"karma-chrome-launcher": "3.1.0",
+		"karma-coverage-istanbul-reporter": "2.1.1",
+		"karma-jasmine": "3.1.0",
+		"karma-jasmine-html-reporter": "1.5.1",
+		"ng-packagr": "5.7.1",
+		"prettier": "1.13.7",
+		"protractor": "5.4.3",
+		"scss-bundle": "3.0.2",
+		"ts-node": "5.0.1",
+		"tsickle": "0.35.0",
+		"tslib": "^1.9.0"
+	}
+}
