@@ -1,3 +1,26 @@
+// check the state list is null before submitting
+    let statesListMissing:any=[];
+    statesListMissing = reqBody.location ? reqBody.location['stateName'] ? 
+    reqBody.location['stateName']: []
+       :[];
+
+    // for local testing
+    //statesListMissing =['Albama','Wisconsin','null', null];
+    let stateListMissing: boolean = false; 
+    if(statesListMissing && statesListMissing.length > 0){
+       statesListMissing.forEach( (state) => {
+          if(state == null || state === 'null') stateListMissing = true;
+       });
+    }
+
+    if(stateListMissing){
+      this.createRuleResponseMessage = {
+        show: true,
+        text: 'State Lists are missing. Please update that section to proceed further.'
+      };
+      return; 
+    }
+
 openapi: 3.0.0
 info:
   title: Fraud Exclusions Management API
