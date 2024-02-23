@@ -50,3 +50,24 @@ validateConditions(rule,entity){
 			}
 		});
 	}
+
+
+function validateConditions(rule, entity) {
+    const checkForChildrenObjects = ['a', 'b', 'c', 'd', 'e', 'f', 'g'];
+
+    function validateElement(element) {
+        if (checkForChildrenObjects.includes(element.nodeName)) {
+            // Assuming this.validateElement is defined somewhere else
+            this.validateElement(element);
+        } else {
+            validateChildElements(element.childInstanceElements);
+        }
+    }
+
+    function validateChildElements(elements) {
+        elements.forEach(validateElement);
+    }
+
+    entity.childInstanceElements.forEach(validateElement);
+}
+
